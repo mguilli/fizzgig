@@ -4,7 +4,7 @@ register = Register.create(
   user_id: 1
   )
 
-Entry.get_citizens_data(register)
+Entry.get_excel_seed_data('Citizens', 4, 13, register.id)
 
 puts "0 users created."
 puts "#{Register.count} registers created."
