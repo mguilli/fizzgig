@@ -11,17 +11,18 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140923021909) do
+ActiveRecord::Schema.define(version: 20140924044906) do
 
   create_table "entries", force: true do |t|
     t.string   "name"
     t.date     "date"
-    t.boolean  "cleared",      default: false
+    t.boolean  "cleared",       default: false
     t.integer  "credit_cents"
     t.integer  "debit_cents"
     t.integer  "register_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "balance_cents"
   end
 
   add_index "entries", ["register_id"], name: "index_entries_on_register_id"
@@ -32,6 +33,7 @@ ActiveRecord::Schema.define(version: 20140923021909) do
     t.integer  "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "startbalance_cents"
   end
 
   add_index "registers", ["user_id"], name: "index_registers_on_user_id"
