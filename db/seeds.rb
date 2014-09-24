@@ -4,7 +4,7 @@ register = Register.create(
   user_id: 1
   )
 
-Entry.get_excel_seed_data('Citizens', 4, 13, register.id)
+Entry.get_excel_seed_data('Citizens', 4, 15, register.id)
 
 register = Register.create(
   name: "Regions",
@@ -12,7 +12,7 @@ register = Register.create(
   user_id: 1
   )
 
-Entry.get_excel_seed_data('Regions', 3, 15, register.id)
+Entry.get_excel_seed_data('Regions', 3, 17, register.id)
 
 puts "0 users created."
 puts "#{Register.count} registers created."

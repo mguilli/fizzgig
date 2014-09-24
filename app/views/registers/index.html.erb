@@ -1,7 +1,7 @@
 <h2>Accounts</h2>
 
 <div>
-  <%= @registers.each do |reg| %>
-    <%= link_to reg.name, 
+  <% @registers.each do |reg| %>
+    <%= link_to reg.name, register_entries_path(reg.id) %>
   <% end %>
 </div>

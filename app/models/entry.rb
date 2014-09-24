@@ -1,10 +1,13 @@
 class Entry < ActiveRecord::Base
   belongs_to :register
 
+  monetize :credit_cents
+  monetize :debit_cents
+
   require 'roo'
 
   def self.get_excel_seed_data(sheet, start_row, end_row, register_id)
-    s = Roo::Excel.new("#{Rails.root}/db/FizzgigSampleData.xls")
+    s = Roo::Excel.new("#{Rails.root}/tmp/FizzgigSampleData.xls")
     s.default_sheet = sheet
 
     start_row.upto(end_row) do |line|
