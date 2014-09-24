@@ -16,6 +16,15 @@ register = Register.create(
 
 Entry.get_excel_seed_data('Regions', 4, 18, register.id)
 
+register = Register.create(
+  name: "Test",
+  acctnumber: "3333",
+  user_id: 1,
+  startbalance_cents: 1_00
+  )
+
+Entry.get_excel_seed_data('Test', 5, 16, register.id)
+
 puts "0 users created."
 puts "#{Register.count} registers created."
 puts "#{Entry.count} register entries created."

@@ -7,6 +7,7 @@
     <tr>
       <th>Date</th>
       <th>Description</th>
+      <th>ID</th>
       <th>Debit</th>
       <th>Credit</th>
       <th>Balance</th>
@@ -22,6 +23,7 @@
 
         <td><%= entry.date %></td>
         <td><%= entry.name %></td>
+        <td><%= entry.id %></td>
         <td><%= hide_if_nil(entry.debit) %></td>
         <td><%= hide_if_nil(entry.credit) %></td>
         <td><%= entry.balance %></td>

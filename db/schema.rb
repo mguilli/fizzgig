@@ -17,12 +17,12 @@ ActiveRecord::Schema.define(version: 20140924044906) do
     t.string   "name"
     t.date     "date"
     t.boolean  "cleared",       default: false
-    t.integer  "credit_cents"
-    t.integer  "debit_cents"
+    t.integer  "credit_cents",  default: 0
+    t.integer  "debit_cents",   default: 0
     t.integer  "register_id"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "balance_cents"
+    t.integer  "balance_cents", default: 0
   end
 
   add_index "entries", ["register_id"], name: "index_entries_on_register_id"
@@ -33,7 +33,7 @@ ActiveRecord::Schema.define(version: 20140924044906) do
     t.integer  "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "startbalance_cents"
+    t.integer  "startbalance_cents", default: 0
   end
 
   add_index "registers", ["user_id"], name: "index_registers_on_user_id"
