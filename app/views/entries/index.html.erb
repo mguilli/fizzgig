@@ -13,9 +13,7 @@
     </tr>
   </thead>
   <tbody>
-    <% balance = @available_balance %>
     <% @entries.each do |entry| %>
-      <% movement = (entry.credit - entry.debit) %>
       <% if entry.cleared %>
         <tr>
       <% else %>
@@ -26,11 +24,10 @@
         <td><%= entry.name %></td>
         <td><%= hide_if_nil(entry.debit) %></td>
         <td><%= hide_if_nil(entry.credit) %></td>
-        <td><%= balance %></td>
+        <td><%= entry.balance %></td>
       </tr>
-      <% balance -= movement %>
     <% end %>
     
   </tbody>
 </table>
-<h2><%= balance %></h2>
+<h5>Starting balance = <%= @register.startbalance %></h5>

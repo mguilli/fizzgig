@@ -18,38 +18,54 @@ class Entry < ActiveRecord::Base
       credit = (s.cell(line, 'D').to_f * 100).round.to_i
       debit = (s.cell(line, 'E').to_f * 100).round.to_i
 
-      Entry.create(cleared: cleared, date: date, name: name, credit_cents: credit, debit_cents: debit, 
-                  register_id: register_id )
+      new_entry = Entry.new(cleared: cleared, date: date, name: name, credit_cents: credit, 
+                            debit_cents: debit, register_id: register_id, balance_cents: 0 )
+      if new_entry.save
+        puts "Entry passed!"
+        new_entry.update_balances
+      else
+        puts new_entry.errors.full_messages
+      end
     end    
   end
 
-  # def update_balances
-  #   register = Register.where(id: self.register_id)
-  #   entries = register.entries.order(date: :asc).order(credit_cents: :desc).order(debit_cents: :desc)
+  def update_balances
+    register = Register.where(id: self.register_id).first
+    entries = register.entries.order(date: :asc).order(credit_cents: :desc).order(debit_cents: :desc)
 
-  #   # register.entries.where("date >= ?", 6.months.ago).order(date: :desc).order(credit_cents: :asc).order(debit_cents: :asc)
+    # register.entries.where("date >= ?", 6.months.ago).order(date: :desc).order(credit_cents: :asc).order(debit_cents: :asc)
 
-  #   key = entries.pluck(:id)
-  #   position = key.index(self.id)
-  #   size = key.count
+    key = entries.pluck(:id)
+    position = key.index(self.id)
+    size = key.count
+    
+    # Testing block
+    # puts position
+    # puts self.id
+    # puts self.name
+    # puts self.debit_cents
+    # puts self.credit_cents
 
-  #   # Set balance of current entry based on starting balance or balance of previous item
-  #   if position = 0
-  #     balance_to_here = register.startbalance + (self.credit - self.debit)
-  #   else
-  #     balance_to_here = entries[position-1].balance + (self.credit - self.debit)
-  #   end
+    # Set balance of current entry based on starting balance or balance of previous item
+    if position == 0
+      balance_to_here = register.startbalance_cents + (self.credit_cents - self.debit_cents)
+    else
+      balance_to_here = entries[position-1].balance_cents + (self.credit_cents - self.debit_cents)
+    end
 
-  #   # Update current entry's balance
-  #   self.update_attribute(:balance_cents, balance_to_here.cents)
+    # Update current entry's balance
+    self.update_attribute(:balance_cents, balance_to_here)
 
-  #   # Check if current entry is latest entry, and if not, update all later entry balances
-  #   if (position + 1) < size
-  #     (position + 1).upto(size) do |k|
-  #       new_balance = entries[k-1].balance + (entries[k].credit - entries[k].debit)
-  #       Entry.find(key[k]).update_attribute(:balance_cents, new_balance.cents)
-  #     end
-  #   end
-  # end
+    new_balance = 0
+
+    # Check if current entry is latest entry, and if not, update all later entry balances
+    if (position + 1) < size
+      (position + 1).upto(size-1) do |k|
+        new_balance = entries[k-1].balance_cents + (entries[k].credit_cents - entries[k].debit_cents)
+        Entry.find(key[k]).update_attribute(:balance_cents, new_balance)
+      end
+    end
+  end
 end
+  
 
