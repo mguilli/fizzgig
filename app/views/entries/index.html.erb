@@ -2,6 +2,8 @@
 <h4>Available Balance = <%= @available_balance %></h4>
 <h4>Bank balance = <%= @cleared_balance %></h4>
 
+<%= render partial: 'form' %>
+
 <table class="table">
   <thead>
     <tr>
@@ -15,11 +17,8 @@
   </thead>
   <tbody>
     <% @entries.each do |entry| %>
-      <% if entry.cleared %>
-        <tr>
-      <% else %>
-        <tr class="warning">
-      <% end %>
+ 
+      <tr class="<%= 'warning' unless entry.cleared %>" data-epoch= <%= entry.date.to_time.to_i %>>
 
         <td><%= entry.date %></td>
         <td><%= entry.name %></td>
