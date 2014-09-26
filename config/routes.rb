@@ -5,7 +5,9 @@ Fizzgig::Application.routes.draw do
   # You can have the root of your site routed with "root"
   root 'welcome#index'
   resources :registers do
-    resources :entries
+    resources :entries do
+      put 'multiselect', on: :collection
+    end
   end
 
   # Example of regular route:

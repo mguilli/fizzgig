@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140924044906) do
+ActiveRecord::Schema.define(version: 20140926003733) do
 
   create_table "entries", force: true do |t|
     t.string   "name"
@@ -23,8 +23,10 @@ ActiveRecord::Schema.define(version: 20140924044906) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "balance_cents", default: 0
+    t.integer  "rank"
   end
 
+  add_index "entries", ["rank"], name: "index_entries_on_rank"
   add_index "entries", ["register_id"], name: "index_entries_on_register_id"
 
   create_table "registers", force: true do |t|

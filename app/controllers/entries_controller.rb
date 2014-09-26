@@ -4,13 +4,10 @@ class EntriesController < ApplicationController
     @entry = Entry.new
     @register = Register.find(params[:register_id])
 
-    @entries = @register.entries.where("date >= ?", 6.months.ago).order(date: :asc)
-                        .order(credit_cents: :desc).order(debit_cents: :desc)
-                        .order(id: :asc).reverse
+    @entries = @register.ranked
 
-    @available_balance = @entries.first.balance
-    differential = @register.entries.where(cleared: false).sum(:credit_cents) - @register.entries.where(cleared: false).sum(:debit_cents)    
-    @cleared_balance = @available_balance - Money.new(differential)
+    @available_balance = @register.available_balance
+    @cleared_balance = @register.cleared_balance
 
   end
 
@@ -22,6 +19,10 @@ class EntriesController < ApplicationController
     @register = Register.find(params[:register_id])
     @entry = @register.entries.build(entry_params)
 
+    # Any way to get @entries from index to the create.js.erb order to render the table partial?
+    @entries = @register.ranked
+    @new_entry = Entry.new # To pass to form through JQuery
+
     debit = params[:debit].to_money
     @entry.debit_cents = debit.cents
 
@@ -29,6 +30,7 @@ class EntriesController < ApplicationController
     @entry.credit_cents = credit.cents
 
     @entry.save
+    # @entry.reload
 
     respond_to do |format|
       format.js do
@@ -37,10 +39,21 @@ class EntriesController < ApplicationController
     end
   end
 
+  def multiselect
+    if params[:commit]
+      Entry.where(id: params[:entry_ids]).update_all(cleared: true)
+    elsif params[:unclear_button]
+      Entry.where(id: params[:entry_ids]).update_all(cleared: false)
+    elsif params[:delete_button]
+      Entry.where(id: params[:entry_ids]).delete_all      
+    end
+      redirect_to :back
+  end
+
   private
 
   def entry_params
-    params.require(:entry).permit(:name, :date, :credit_cents, :debit_cents)
+    params.require(:entry).permit(:name, :date)
   end
 end
 

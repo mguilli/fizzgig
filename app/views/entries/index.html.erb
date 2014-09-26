@@ -1,34 +1,18 @@
 <h2>Account Log: <%= @register.name %></h2>
-<h4>Available Balance = <%= @available_balance %></h4>
-<h4>Bank balance = <%= @cleared_balance %></h4>
+<h4>Available Balance = <span id='avail'><%= @available_balance %></span></h4>
+<h4>Bank balance = <span id='bank'><%= @cleared_balance %></span></h4>
 
-<%= render partial: 'form' %>
+<div id='entryform'>
+  <%= render partial: 'form', locals: {register: @register, entry: @entry} %>
+</div>
 
-<table class="table">
-  <thead>
-    <tr>
-      <th>Date</th>
-      <th>Description</th>
-      <th>ID</th>
-      <th>Debit</th>
-      <th>Credit</th>
-      <th>Balance</th>
-    </tr>
-  </thead>
-  <tbody>
-    <% @entries.each do |entry| %>
- 
-      <tr class="<%= 'warning' unless entry.cleared %>" data-epoch= <%= entry.date.to_time.to_i %>>
+<%= form_tag multiselect_register_entries_path, method: :put do %>
+  <%= submit_tag 'Clear' %>
+  <%= submit_tag 'Unclear', name: 'unclear_button' %>
+  <%= submit_tag 'Delete', name: 'delete_button', data: { confirm: 'Are you sure?'} %>
+  <div id="entrytable">
+    <%= render partial: 'table' %>
+  </div>
+<% end %>
 
-        <td><%= entry.date %></td>
-        <td><%= entry.name %></td>
-        <td><%= entry.id %></td>
-        <td><%= hide_if_nil(entry.debit) %></td>
-        <td><%= hide_if_nil(entry.credit) %></td>
-        <td><%= entry.balance %></td>
-      </tr>
-    <% end %>
-    
-  </tbody>
-</table>
 <h5>Starting balance = <%= @register.startbalance %></h5>

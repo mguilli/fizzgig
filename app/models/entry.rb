@@ -48,12 +48,15 @@ class Entry < ActiveRecord::Base
     # Set balance of current entry based on starting balance or balance of previous item
     if position == 0
       balance_to_here = xregister.startbalance_cents + movement
+      new_rank = 1
     else
       balance_to_here = xentries[position-1].balance_cents + movement
+      new_rank = xentries[position-1].rank + 1
     end
 
-    # Update current entry's balance
+    # Update current entry's balance & rank
     xentries[position].update_column(:balance_cents, balance_to_here)
+    xentries[position].update_column(:rank, new_rank)
 
     # Debugging
       # puts "id: #{z.id} | #{z.date} | #{z.name} | #{z.debit_cents} | #{z.credit_cents} | #{z.balance_cents}"
@@ -61,12 +64,15 @@ class Entry < ActiveRecord::Base
       # puts "#{balance_to_here}"
 
     new_balance = 0
+    updated_rank = 0
 
     # Check if current entry is last entry, and if not, update all later entry balances
     if (position + 1) < size
       (position + 1).upto(size-1) do |k|
         new_balance = xentries[k-1].balance_cents + (xentries[k].credit_cents - xentries[k].debit_cents)
+        updated_rank = xentries[k-1].rank + 1
         xentries[k].update_column(:balance_cents, new_balance)
+        xentries[k].update_column(:rank, updated_rank)
 
         # Debugging
           # target = Entry.find(key[k])  

@@ -1,17 +1,21 @@
-array_of_trs = $("tr");
-window.foo = array_of_trs;
-$.each(array_of_trs, function(index, value){
-  console.log($(value).data('epoch'));
-});
+$('#entrytable').html("<%= escape_javascript(render partial: 'table') %>");
+$('#avail').html("<%= @entries.first.balance %>");
+$('#bank').html("<%= @register.cleared_balance %>");  //check again for change after clearing items
 
-var new_entry_epoch_value = <%= @entry.date.to_time.to_i %>
+// array_of_trs = $("tr");
 
-$.each(array_of_trs, function(index, value){
-  if($(value).data('epoch') < new_entry_epoch_value){
-    $(this).before("<tr> <td>Hello World</td> </tr>");
-    return false;
-  }
-  else {
+// var new_entry_rank = <%= @entry.reload.rank %>
 
-  }
-})
+// var html_insert = "<tr class='warning'><td>Hello World-------</td></tr>";
+
+// $.each(array_of_trs, function(index, value){
+//   console.log("rank = " + $(value).data('rank'));
+//   if ($(value).data('rank') == new_entry_rank) {
+//     $(this).after(html_insert);
+//     return false;
+//   }
+// });  
+
+// Tries to patch entry and doesn't clear form.
+$('#entryform').html("<%= escape_javascript\
+    (render partial: 'form', locals: {register: @register, entry: @new_entry}) %>");
