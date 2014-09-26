@@ -3,12 +3,12 @@ class Register < ActiveRecord::Base
 
   monetize :startbalance_cents
 
-  def ranked
+  def entries_ranked
     self.entries.order(rank: :desc)  
   end
 
   def available_balance
-    self.ranked.first.balance
+    self.entries_ranked.first.balance
   end
 
   def cleared_balance

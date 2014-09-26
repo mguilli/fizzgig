@@ -31,7 +31,24 @@ class Entry < ActiveRecord::Base
     end    
   end
 
-  private
+  def self.update_after_delete(register_id, lowest_rank)
+    # Call private method to update only balances of records ranked higher than lowest ranked deleted record
+    # self.update_newer_balances
+
+    xregister = Register.find(register_id)
+
+      if lowest_rank <= 1
+        entry_to_update_from = xregister.entries_ranked.last
+      else
+        rank_to_update_from = lowest_rank - 1
+        # Select entry corresponding to that rank
+        entry_to_update_from = xregister.entries.find_by(rank: rank_to_update_from)
+      end
+
+      entry_to_update_from.update_newer_balances
+  end
+
+  # private
 
   def update_newer_balances
     z = self

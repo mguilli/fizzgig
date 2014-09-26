@@ -16,16 +16,17 @@
     <% @entries.each do |entry| %>
 
 
-      <%= content_tag :tr, class: ("warning" unless entry.cleared), data: {rank: entry.rank} do -%>
+      <%= content_tag :tr, id: entry.id, class: ("warning" unless entry.cleared), 
+                      data: {rank: entry.rank} do -%>
       
-        <td><%= check_box_tag 'entry_ids[]', entry.id %></td>
+        <td ><%= check_box_tag 'entry_ids[]', entry.id %></td>
         <td><%= entry.date %></td>
         <td><%= entry.name %></td>
         <td><%= entry.rank %></td>
         <td><%= entry.id %></td>
         <td><%= hide_if_nil(entry.debit) %></td>
         <td><%= hide_if_nil(entry.credit) %></td>
-        <td><%= entry.balance %></td>
+        <td class="balance-cell"><%= entry.balance %></td>
       <% end -%>
     <% end %>
     

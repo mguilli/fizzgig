@@ -1,21 +1,31 @@
-$('#entrytable').html("<%= escape_javascript(render partial: 'table') %>");
-$('#avail').html("<%= @entries.first.balance %>");
-$('#bank').html("<%= @register.cleared_balance %>");  //check again for change after clearing items
+var entries = <%= "#{@entries.to_json}".html_safe %> //print out an array of some sort
 
-// array_of_trs = $("tr");
+console.log(entries);
 
-// var new_entry_rank = <%= @entry.reload.rank %>
 
-// var html_insert = "<tr class='warning'><td>Hello World-------</td></tr>";
+console.log("Sanity");
+// New entries will always be uncleared, and will never change the cleared balance
 
-// $.each(array_of_trs, function(index, value){
-//   console.log("rank = " + $(value).data('rank'));
-//   if ($(value).data('rank') == new_entry_rank) {
-//     $(this).after(html_insert);
-//     return false;
-//   }
-// });  
 
-// Tries to patch entry and doesn't clear form.
-$('#entryform').html("<%= escape_javascript\
-    (render partial: 'form', locals: {register: @register, entry: @new_entry}) %>");
+
+array_of_trs = $("tr");
+
+$.each(array_of_trs, function(index, value){
+  var entryObject;
+  console.log("array_index= " + index);
+  $.each(<%= @entries %>, function(index, entry){
+    console.log("Value id: " + value.attr('id'));
+    console.log("Entry id: " + entry.id + "Entry index: " + index);
+  //   if(value.attr('id') == entry.id){
+  //     entryObject = entry
+  //     console.log('matched')
+  //   }
+
+  //   $(value).data('rank', entryObject.rank)
+
+  //   $(value).find(".balance-cell").html((entryObject.balance_cents/100).toFixed(2))
+  });
+
+});
+
+

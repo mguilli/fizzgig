@@ -4,7 +4,7 @@ class EntriesController < ApplicationController
     @entry = Entry.new
     @register = Register.find(params[:register_id])
 
-    @entries = @register.ranked
+    @entries = @register.entries_ranked
 
     @available_balance = @register.available_balance
     @cleared_balance = @register.cleared_balance
@@ -20,7 +20,7 @@ class EntriesController < ApplicationController
     @entry = @register.entries.build(entry_params)
 
     # Any way to get @entries from index to the create.js.erb order to render the table partial?
-    @entries = @register.ranked
+    @entries = @register.entries_ranked
     @new_entry = Entry.new # To pass to form through JQuery
 
     debit = params[:debit].to_money
@@ -40,14 +40,21 @@ class EntriesController < ApplicationController
   end
 
   def multiselect
+
     if params[:commit]
       Entry.where(id: params[:entry_ids]).update_all(cleared: true)
     elsif params[:unclear_button]
       Entry.where(id: params[:entry_ids]).update_all(cleared: false)
     elsif params[:delete_button]
-      Entry.where(id: params[:entry_ids]).delete_all      
+      # Find lowest rank in entries to be deleted
+      lowest_rank = Entry.where(id: params[:entry_ids]).pluck(:rank).min
+
+      Entry.where(id: params[:entry_ids]).delete_all
+      
+      Entry.update_after_delete(params[:register_id], lowest_rank)
     end
-      redirect_to :back
+
+    redirect_to :back
   end
 
   private
