@@ -1,18 +1,59 @@
-<h2>Account Log: <%= @register.name %></h2>
-<h4>Available Balance = <span id='avail'><%= @available_balance %></span></h4>
-<h4>Bank balance = <span id='bank'><%= @cleared_balance %></span></h4>
-
-<div id='entryform'>
-  <%= render partial: 'form', locals: {register: @register, entry: @entry} %>
+<div class='row'>
+  <div class = 'col-md-12'>
+    <h2>Account Log: <%= @register.name %></h2>
+    <h4>Available Balance = <span id='avail'><%= @available_balance %></span></h4>
+    <h4>Bank balance = <span id='bank'><%= @cleared_balance %></span></h4>
+    <br />
+  </div>
 </div>
 
-<%= form_tag multiselect_register_entries_path, method: :put do %>
-  <%= submit_tag 'Clear' %>
-  <%= submit_tag 'Unclear', name: 'unclear_button' %>
-  <%= submit_tag 'Delete', name: 'delete_button', data: { confirm: 'Are you sure?'} %>
-  <div id="entrytable">
-    <%= render partial: 'table' %>
+<div class = 'row'>
+  <div id='entryform' class='col-md-12'>
+    <%= render partial: 'form', locals: {register: @register, entry: @entry} %>
   </div>
-<% end %>
+  <br />
+</div>
+<div class='row'>
+  <div class='col-md-12'>
+    <%= form_tag multiselect_register_entries_path, method: :put, class: 'form' do %>
+      <div class='btn-group'>
+        <%= submit_tag 'Clear', class: 'btn btn-default' %>
+        <%= submit_tag 'Unclear', name: 'unclear_button', class: 'btn btn-default' %>
+        <%= submit_tag 'Delete', name: 'delete_button', class: 'btn btn-default', data: { confirm: 'Are you sure?'} %>
+      </div>
 
-<h5>Starting balance = <%= @register.startbalance %></h5>
+      <table class="table">
+        <thead>
+          <tr>
+            <th></th>
+            <th>Date</th>
+            <th>Description</th>
+            <th>Rank</th>
+            <th>ID</th>
+            <th>Debit</th>
+            <th>Credit</th>
+            <th>Balance</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @entries.each do |entry| %>
+            <%= content_tag :tr, id: entry.id, class: ("warning" unless entry.cleared), 
+                            data: {rank: entry.rank} do -%>      
+              <td ><%= check_box_tag 'entry_ids[]', entry.id %></td>
+              <td><%= entry.date %></td>
+              <td><%= entry.name %></td>
+              <td><%= entry.rank %></td>
+              <td><%= entry.id %></td>
+              <td><%= hide_if_nil(entry.debit) %></td>
+              <td><%= hide_if_nil(entry.credit) %></td>
+              <td><%= entry.balance %></td>
+            <% end -%>
+          <% end %>
+          
+        </tbody>
+      </table>
+    <% end %>
+
+    <h5>Starting balance = <%= @register.startbalance %></h5>
+  </div>
+</div>

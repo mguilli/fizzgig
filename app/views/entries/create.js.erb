@@ -1,31 +1,58 @@
-var entries = <%= "#{@entries.to_json}".html_safe %> //print out an array of some sort
+// Update the available balance
+$('#avail').html("<%= @entries.first.balance %>");
 
-console.log(entries);
+// Empty the form and reset box focus
+$('form#new_entry').find('input[type="text"]').val('')
+$('#entry_name').focus()
 
+var entries = <%= raw @entries.to_json %> //print out an array of some sort
+// console.log(entries);
 
 console.log("Sanity");
-// New entries will always be uncleared, and will never change the cleared balance
 
+
+
+var html_insert = "<tr id=<%= @entry.reload.id %> class='warning'>\
+                  <td><input id='entry_ids_' name='entry_ids[]' type='checkbox' value='<%= @entry.id %>'></td>\
+                  <td><%= @entry.date %></td>\
+                  <td><%= @entry.name %></td>\
+                  <td></td>\
+                  <td><%= @entry.id %></td>\
+                  <td><%= hide_if_nil(@entry.debit) %></td>\
+                  <td><%= hide_if_nil(@entry.credit) %></td>\
+                  <td><%= @entry.balance %></td>\
+                  </tr>";
+
+// Find rank in current html before updating, equal to rank of newly created entry
+  // The existing entry's rank will be incremented by one, so place the new entry after it before update
+  // A new first entry will not have 
+// need to reload @entry, since the rank was set in after_save
+// reads data from html, not data stored to the tr element
+
+if (<%= @entry.rank %> > $('tr:eq(1)').data('rank')) {
+  $('tr:eq(1)').before(html_insert);
+} else{
+  $('tr[data-rank="<%= @entry.rank %>"]').after(html_insert);
+};
 
 
 array_of_trs = $("tr");
 
-$.each(array_of_trs, function(index, value){
-  var entryObject;
-  console.log("array_index= " + index);
-  $.each(<%= @entries %>, function(index, entry){
-    console.log("Value id: " + value.attr('id'));
-    console.log("Entry id: " + entry.id + "Entry index: " + index);
-  //   if(value.attr('id') == entry.id){
-  //     entryObject = entry
-  //     console.log('matched')
-  //   }
-
-  //   $(value).data('rank', entryObject.rank)
-
-  //   $(value).find(".balance-cell").html((entryObject.balance_cents/100).toFixed(2))
-  });
-
+$.each(array_of_trs, function(index, tr_val){
+  // console.log(tr_val);
+  var $table_row = $(this);
+  $.each(entries, function(i, entry_val) {
+    // console.log("tr id:" + $table_row.attr('id') + " Entry_id: " + entry_val.id);
+    if ($(tr_val).attr('id') == entry_val.id) {
+      $table_row.find('td:last').html((entry_val.balance_cents / 100).toFixed(2));
+      $table_row.data('rank', entry_val.rank);
+      $table_row.attr('data-rank', entry_val.rank);
+      $table_row.find('td:eq(3)').html(entry_val.rank); // to be deleted later
+    };
+  })
 });
+
+
+
 
 
