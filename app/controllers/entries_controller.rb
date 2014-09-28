@@ -30,31 +30,51 @@ class EntriesController < ApplicationController
     @entry.credit_cents = credit.cents
 
     @entry.save
-    # @entry.reload
+
+    # Need to reload variables to be accessed in js, 
+    # since balances changed in after_save event
+    @entry.reload
+    @register.reload
 
     respond_to do |format|
-      format.js do
-        render "create"
-      end
+      format.js #do
+      #   render "create"
+      # end
     end
   end
 
   def multiselect
+    @register = Register.find(params[:register_id])
 
-    if params[:commit]
-      Entry.where(id: params[:entry_ids]).update_all(cleared: true)
-    elsif params[:unclear_button]
-      Entry.where(id: params[:entry_ids]).update_all(cleared: false)
-    elsif params[:delete_button]
-      # Find lowest rank in entries to be deleted
-      lowest_rank = Entry.where(id: params[:entry_ids]).pluck(:rank).min
+    @cleared = params[:commit]
+    @uncleared = params[:unclear_button]
+    @multi_delete = params[:delete_button]
+    @entry_ids = params[:entry_ids] # Not used in multiselect.js
 
-      Entry.where(id: params[:entry_ids]).delete_all
-      
-      Entry.update_after_delete(params[:register_id], lowest_rank)
+    # Find lowest rank in entries to be deleted
+    lowest_rank = Entry.where(id: @entry_ids).pluck(:rank).min
+
+    if @cleared
+      Entry.where(id: @entry_ids).update_all(cleared: true)
+    elsif @uncleared
+      Entry.where(id: @entry_ids).update_all(cleared: false)
+    elsif @multi_delete
+      Entry.where(id: @entry_ids).delete_all     
     end
 
-    redirect_to :back
+    # Update balances based on lowest ranked entry deleted or updated
+    Entry.update_after_multiselect(@register.id, lowest_rank)
+
+    # Load updated balances for multiselect.js
+    @register.reload
+    @entries = @register.entries_ranked
+    @available_balance = @register.available_balance
+    @cleared_balance = @register.cleared_balance
+
+    respond_to do |format|
+      format.html{ redirect_to :back }
+      format.js
+    end
   end
 
   private

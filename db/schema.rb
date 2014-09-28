@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140926003733) do
+ActiveRecord::Schema.define(version: 20140928040335) do
 
   create_table "entries", force: true do |t|
     t.string   "name"
@@ -35,7 +35,9 @@ ActiveRecord::Schema.define(version: 20140926003733) do
     t.integer  "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "startbalance_cents", default: 0
+    t.integer  "startbalance_cents",      default: 0
+    t.integer  "available_balance_cents", default: 0
+    t.integer  "cleared_balance_cents",   default: 0
   end
 
   add_index "registers", ["user_id"], name: "index_registers_on_user_id"

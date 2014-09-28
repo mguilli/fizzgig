@@ -1,0 +1,40 @@
+console.log('Suck it!');
+
+var entries = <%= raw @entries.to_json %>;
+console.log(entries);
+
+
+if ('<%= @cleared %>') {
+  $('input:checked').parent().parent().removeClass("warning");
+} else if ('<%= @uncleared %>') {
+  $('input:checked').parent().parent().addClass("warning");
+} else if ('<%= @multi_delete %>') {
+
+  $('input:checked').parent().parent().remove();
+
+  $.each(entries, function (index, entry) {
+    console.log("entry.id: " + entry.id);
+    
+    var tab_row = $('#' + entry.id);
+    console.log("tab_row: " + tab_row);
+
+    if (tab_row.length) {
+      console.log("td_balance: " + tab_row.find('td:last'));
+      console.log(entry.balance_cents);
+      tab_row.find('td:last').html((entry.balance_cents / 100).toFixed(2));
+      tab_row.data('rank', entry.rank);
+      tab_row.attr('data-rank', entry.rank);
+      tab_row.find('td:eq(3)').html(entry.rank); // to be deleted later
+    };
+  })
+  
+} else {
+  console.log('Oops! No pertinent data detected!')
+};
+
+$('#avail').html("<%= @available_balance %>");
+$('#bank').html("<%= @cleared_balance %>");
+$('tbody :checked').attr('checked', false);
+$('#entry_name').focus()
+
+

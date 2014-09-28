@@ -23,7 +23,7 @@ class Entry < ActiveRecord::Base
       new_entry = Entry.new(cleared: cleared, date: date, name: name, credit_cents: credit, 
                             debit_cents: debit, register_id: register_id )
       if new_entry.save
-        puts "Entry passed!"
+        puts "Entry saved!"
         # new_entry.update_newer_balances
       else
         puts new_entry.errors.full_messages
@@ -31,7 +31,7 @@ class Entry < ActiveRecord::Base
     end    
   end
 
-  def self.update_after_delete(register_id, lowest_rank)
+  def self.update_after_multiselect(register_id, lowest_rank)
     # Call private method to update only balances of records ranked higher than lowest ranked deleted record
     # self.update_newer_balances
 
@@ -97,6 +97,12 @@ class Entry < ActiveRecord::Base
           # puts "target-> name: #{target.name} | balance: #{target.balance_cents}"
       end
     end
+
+    # Update available and cleared balances on the register
+    new_avail = xregister.calc_available_balance_cents
+    new_cleared = xregister.calc_cleared_balance_cents
+    xregister.update_attributes(available_balance_cents: new_avail, cleared_balance_cents: new_cleared)
+
   end
 end
   

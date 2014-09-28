@@ -1,5 +1,5 @@
 // Update the available balance
-$('#avail').html("<%= @entries.first.balance %>");
+$('#avail').html("<%= @register.available_balance %>");
 
 // Empty the form and reset box focus
 $('form#new_entry').find('input[type="text"]').val('')
@@ -12,7 +12,7 @@ console.log("Sanity");
 
 
 
-var html_insert = "<tr id=<%= @entry.reload.id %> class='warning'>\
+var html_insert = "<tr id=<%= @entry.id %> class='warning'>\
                   <td><input id='entry_ids_' name='entry_ids[]' type='checkbox' value='<%= @entry.id %>'></td>\
                   <td><%= @entry.date %></td>\
                   <td><%= @entry.name %></td>\
@@ -29,14 +29,14 @@ var html_insert = "<tr id=<%= @entry.reload.id %> class='warning'>\
 // need to reload @entry, since the rank was set in after_save
 // reads data from html, not data stored to the tr element
 
-if (<%= @entry.rank %> > $('tr:eq(1)').data('rank')) {
+if (<%= @entry.rank %> > $('tbody tr:first').data('rank')) {
   $('tr:eq(1)').before(html_insert);
 } else{
   $('tr[data-rank="<%= @entry.rank %>"]').after(html_insert);
 };
 
 
-array_of_trs = $("tr");
+array_of_trs = $("tbody tr");
 
 $.each(array_of_trs, function(index, tr_val){
   // console.log(tr_val);
@@ -45,7 +45,7 @@ $.each(array_of_trs, function(index, tr_val){
     // console.log("tr id:" + $table_row.attr('id') + " Entry_id: " + entry_val.id);
     if ($(tr_val).attr('id') == entry_val.id) {
       $table_row.find('td:last').html((entry_val.balance_cents / 100).toFixed(2));
-      $table_row.data('rank', entry_val.rank);
+      $table_row.data('rank', entry_val.rank); 
       $table_row.attr('data-rank', entry_val.rank);
       $table_row.find('td:eq(3)').html(entry_val.rank); // to be deleted later
     };

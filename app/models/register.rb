@@ -2,18 +2,20 @@ class Register < ActiveRecord::Base
   has_many :entries
 
   monetize :startbalance_cents
+  monetize :available_balance_cents
+  monetize :cleared_balance_cents
 
   def entries_ranked
     self.entries.order(rank: :desc)  
   end
 
-  def available_balance
-    self.entries_ranked.first.balance
+  def calc_available_balance_cents
+    self.entries_ranked.first.balance_cents
   end
 
-  def cleared_balance
+  def calc_cleared_balance_cents
     diff = self.entries.where(cleared: false).sum(:credit_cents) -
             self.entries.where(cleared: false).sum(:debit_cents)
-    s = self.available_balance - Money.new(diff)
+    s = self.calc_available_balance_cents - diff
   end
 end
