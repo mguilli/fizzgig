@@ -1,4 +1,6 @@
 Fizzgig::Application.routes.draw do
+
+  devise_for :users
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
@@ -10,8 +12,9 @@ Fizzgig::Application.routes.draw do
     end
   end
 
-  resources :budgets do 
-    resources :default_items
+  resources :budgets 
+  resources :default_items do
+    resources :default_changes
   end
 
   # Example of regular route:

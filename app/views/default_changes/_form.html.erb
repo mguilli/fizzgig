@@ -1,0 +1,45 @@
+<%= form_for(@default_change) do |f| %>
+  <% if @default_change.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@default_change.errors.count, "error") %> prohibited this default_change from being saved:</h2>
+
+      <ul>
+      <% @default_change.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :day %><br>
+    <%= f.number_field :day %>
+  </div>
+  <div class="field">
+    <%= f.label :name %><br>
+    <%= f.text_field :name %>
+  </div>
+  <div class="field">
+    <%= f.label :debit_cents %><br>
+    <%= f.number_field :debit_cents %>
+  </div>
+  <div class="field">
+    <%= f.label :credit_cents %><br>
+    <%= f.number_field :credit_cents %>
+  </div>
+  <div class="field">
+    <%= f.label :endon %><br>
+    <%= f.number_field :endon %>
+  </div>
+  <div class="field">
+    <%= f.label :month_changed %><br>
+    <%= f.number_field :month_changed %>
+  </div>
+  <div class="field">
+    <%= f.label :default_item_id %><br>
+    <%= f.text_field :default_item_id %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

@@ -1,5 +1,6 @@
 class DefaultItem < ActiveRecord::Base
   belongs_to :budget
+  has_many :default_changes
 
   monetize :credit_cents
   monetize :debit_cents
@@ -23,5 +24,12 @@ class DefaultItem < ActiveRecord::Base
         puts new_default.errors.full_messages
       end
     end    
+  end
+
+  def check_for_change(month)
+    change = default_changes.find("month_changed <= ? AND endon >= ?", month, month)
+    # check for nil values of endon -> perpetual application
+
+    change ? change : self
   end
 end

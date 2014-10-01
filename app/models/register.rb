@@ -1,5 +1,6 @@
 class Register < ActiveRecord::Base
   has_many :entries
+  belongs_to :user
 
   monetize :startbalance_cents
   monetize :available_balance_cents

@@ -9,7 +9,13 @@
 <body>
   <%= link_to 'Accounts', registers_path %>  
   <%= link_to 'Budget', budgets_path(month: Date.today.month, year: Date.today.year) %>
-
+  <%= link_to 'LogIn', new_user_session_path %>
+  <%= link_to 'LogOut', destroy_user_session_path, method: :delete %>
+  <%= "#{current_user.first_name} #{current_user.last_name}" if current_user %>
+  
+  <p class="notice"><%= notice %></p>
+  <p class="alert"><%= alert %></p>
+  
   <div class='container'>
     <%= yield %>
   </div>

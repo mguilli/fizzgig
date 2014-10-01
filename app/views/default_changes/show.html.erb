@@ -1,0 +1,39 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Day:</strong>
+  <%= @default_change.day %>
+</p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @default_change.name %>
+</p>
+
+<p>
+  <strong>Debit cents:</strong>
+  <%= @default_change.debit_cents %>
+</p>
+
+<p>
+  <strong>Credit cents:</strong>
+  <%= @default_change.credit_cents %>
+</p>
+
+<p>
+  <strong>Endon:</strong>
+  <%= @default_change.endon %>
+</p>
+
+<p>
+  <strong>Month changed:</strong>
+  <%= @default_change.month_changed %>
+</p>
+
+<p>
+  <strong>Default item:</strong>
+  <%= @default_change.default_item %>
+</p>
+
+<%= link_to 'Edit', edit_default_change_path(@default_change) %> |
+<%= link_to 'Back', default_changes_path %>

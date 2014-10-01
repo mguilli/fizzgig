@@ -7,6 +7,7 @@ gem 'roo'
 gem 'bootstrap-sass'
 gem 'money-rails'
 gem 'pry'
+gem 'devise'
 
 # Use sqlite3 as the database for Active Record
 gem 'sqlite3'

@@ -1,5 +1,7 @@
 class RegistersController < ApplicationController
+  before_action :authenticate_user!
+
   def index
-    @registers = Register.all
+    @registers = current_user.registers.all
   end
 end

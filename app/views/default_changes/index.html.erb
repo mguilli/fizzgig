@@ -1,0 +1,39 @@
+<h1>Listing default_changes</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Day</th>
+      <th>Name</th>
+      <th>Debit cents</th>
+      <th>Credit cents</th>
+      <th>Endon</th>
+      <th>Month changed</th>
+      <th>Default item</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @default_changes.each do |default_change| %>
+      <tr>
+        <td><%= default_change.day %></td>
+        <td><%= default_change.name %></td>
+        <td><%= default_change.debit_cents %></td>
+        <td><%= default_change.credit_cents %></td>
+        <td><%= default_change.endon %></td>
+        <td><%= default_change.month_changed %></td>
+        <td><%= default_change.default_item %></td>
+        <td><%= link_to 'Show', default_change %></td>
+        <td><%= link_to 'Edit', edit_default_change_path(default_change) %></td>
+        <td><%= link_to 'Destroy', default_change, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Default change', new_default_change_path %>
