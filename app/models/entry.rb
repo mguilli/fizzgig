@@ -86,6 +86,7 @@ class Entry < ActiveRecord::Base
     # Check if current entry is last entry, and if not, update all later entry balances
     if (position + 1) < size
       (position + 1).upto(size-1) do |k|
+        # ??? new_balance = xentries[k] + movement # since all entries after newly inserted entry are affected by inserted entry's movement?
         new_balance = xentries[k-1].balance_cents + (xentries[k].credit_cents - xentries[k].debit_cents)
         updated_rank = xentries[k-1].rank + 1
         xentries[k].update_column(:balance_cents, new_balance)

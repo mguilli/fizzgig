@@ -25,9 +25,13 @@ register = Register.create(
 
 Entry.get_excel_seed_data('Test', 5, 16, register.id)
 
+budget = Budget.create(user_id: 1)
+
+DefaultItem.set_default_seed('DefaultItems', 2, 26, budget.id)
+
 puts "0 users created."
 puts "#{Register.count} registers created."
 puts "#{Entry.count} register entries created."
-puts "0 budgets created."
-puts "0 budget items created."
+puts "#{Budget.count} budgets created."
+puts "#{DefaultItem.count} default budget items created."
 puts "0 categories created."

@@ -10,6 +10,10 @@ Fizzgig::Application.routes.draw do
     end
   end
 
+  resources :budgets do 
+    resources :default_items
+  end
+
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
 

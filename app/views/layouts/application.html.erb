@@ -8,6 +8,7 @@
 </head>
 <body>
   <%= link_to 'Accounts', registers_path %>  
+  <%= link_to 'Budget', budgets_path(month: Date.today.month, year: Date.today.year) %>
 
   <div class='container'>
     <%= yield %>
