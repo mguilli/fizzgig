@@ -26,8 +26,8 @@ ActiveRecord::Schema.define(version: 20141001215407) do
     t.string   "name"
     t.integer  "debit_cents"
     t.integer  "credit_cents"
-    t.integer  "endon"
-    t.integer  "month_changed"
+    t.date     "endon_date",      default: '3000-01-01', null: false
+    t.date     "date_changed"
     t.integer  "default_item_id"
     t.datetime "created_at"
     t.datetime "updated_at"

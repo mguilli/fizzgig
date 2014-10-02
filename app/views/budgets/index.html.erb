@@ -16,7 +16,7 @@
         </tr>
       </thead>
       <tbody>
-        <% @default_items.each do |item| %>
+        <% @items.each do |item| %>
           <tr>
             <td>
               <% if (Date.valid_date?(@this_year, @this_month, item.day)) %>

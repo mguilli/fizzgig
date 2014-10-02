@@ -5,8 +5,8 @@ class CreateDefaultChanges < ActiveRecord::Migration
       t.string :name
       t.integer :debit_cents
       t.integer :credit_cents
-      t.integer :endon
-      t.integer :month_changed
+      t.date :endon_date, null: false, default: Date.new(3000)
+      t.date :date_changed
       t.references :default_item, index: true
 
       t.timestamps

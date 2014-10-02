@@ -3,7 +3,7 @@ class BudgetsController < ApplicationController
 
   def index
     @budget = current_user.budget
-    @default_items = @budget.default_items.order(day: :asc)
+    @default_items = @budget.default_items
 
     # @starting_balance = Register.all.sum(:available_balance_cents)
     @starting_balance = current_user.registers.sum(:available_balance_cents)
@@ -15,6 +15,13 @@ class BudgetsController < ApplicationController
     @next_date = @this_date.next_month
     @following_month = @next_date.month
     @following_year = @next_date.year
+
+    array = []
+    @default_items.each do |x|
+      array << x.check_for_change(@this_date)      
+    end
+
+    @items = array.sort_by {|x| [x.day, -x.credit_cents, -x.debit_cents]}
 
     # hash_array.sort_by {|elem| elem[:date]}
   end
