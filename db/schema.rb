@@ -11,10 +11,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141001215407) do
+ActiveRecord::Schema.define(version: 20141008151411) do
 
   create_table "budgets", force: true do |t|
     t.integer  "user_id"
+    t.date     "start_date"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -24,16 +25,17 @@ ActiveRecord::Schema.define(version: 20141001215407) do
   create_table "default_changes", force: true do |t|
     t.integer  "day"
     t.string   "name"
-    t.integer  "debit_cents"
-    t.integer  "credit_cents"
-    t.date     "endon_date",      default: '3000-01-01', null: false
-    t.date     "date_changed"
+    t.integer  "debit_cents",     default: 0
+    t.integer  "credit_cents",    default: 0
+    t.boolean  "paid",            default: false
     t.integer  "default_item_id"
+    t.integer  "month_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   add_index "default_changes", ["default_item_id"], name: "index_default_changes_on_default_item_id"
+  add_index "default_changes", ["month_id"], name: "index_default_changes_on_month_id"
 
   create_table "default_items", force: true do |t|
     t.integer  "budget_id"
@@ -63,9 +65,46 @@ ActiveRecord::Schema.define(version: 20141001215407) do
   add_index "entries", ["rank"], name: "index_entries_on_rank"
   add_index "entries", ["register_id"], name: "index_entries_on_register_id"
 
+  create_table "items", force: true do |t|
+    t.integer  "day"
+    t.string   "name"
+    t.integer  "debit_cents",     default: 0
+    t.integer  "credit_cents",    default: 0
+    t.boolean  "paid",            default: false
+    t.integer  "default_item_id", default: 0
+    t.integer  "month_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "items", ["month_id"], name: "index_items_on_month_id"
+
+  create_table "months", force: true do |t|
+    t.date     "date"
+    t.integer  "movement_cents", default: 0
+    t.integer  "budget_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "months", ["budget_id"], name: "index_months_on_budget_id"
+
+  create_table "paids", force: true do |t|
+    t.integer  "day"
+    t.string   "name"
+    t.integer  "debit_cents"
+    t.integer  "credit_cents"
+    t.integer  "month_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "paids", ["month_id"], name: "index_paids_on_month_id"
+
   create_table "registers", force: true do |t|
     t.string   "name"
     t.string   "acctnumber"
+    t.date     "start_date"
     t.integer  "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"

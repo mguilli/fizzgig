@@ -1,0 +1,40 @@
+<h3><%= @month.date.strftime("%B %Y") %></h3>
+<%= link_to "Prev", months_path(date: @prev_month) %>
+<%= link_to "Next", months_path(date: @next_month) %>
+
+<div class="row">
+  <div class="col-md-10">
+    <table class="table table-condensed">
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>DefaultItem ID</th>
+          <th>Description</th>
+          <th>Receivable</th>
+          <th>Payable</th>
+          <th>Balance</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% balance = Money.new(@starting_balance) %>
+        <% @items.each do |item| %>
+          <% balance += (item.credit - item.debit) %>
+          <tr>
+            <td>
+              <% if (Date.valid_date?(@month.date.year, @month.date.month, item.day)) %>
+                <%= Date.new(@month.date.year, @month.date.month, item.day) %>
+              <% else %>
+                <%= Date.civil(@month.date.year, @month.date.month, -1) %>
+              <% end %>
+            </td>
+            <td><%= item.class == DefaultItem ? '-' : item.default_item_id %></td>
+            <td><%= item.name %></td>
+            <td><%= hide_if_nil(item.credit) %></td>
+            <td><%= hide_if_nil(item.debit) %></td>
+            <td><%= balance %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>

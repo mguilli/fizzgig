@@ -1,10 +1,11 @@
 class DefaultChange < ActiveRecord::Base
-  belongs_to :default_item
+  belongs_to :month
+  belongs_to :default_items
 
   monetize :credit_cents
   monetize :debit_cents
 
-  def self.set_change_seed(sheet, start_row, end_row)
+  def self.set_change_seed(sheet, start_row, end_row, budget_id)
     s = Roo::Excel.new("#{Rails.root}/tmp/FizzgigSampleData.xls")
     s.default_sheet = sheet
 
@@ -13,13 +14,14 @@ class DefaultChange < ActiveRecord::Base
       day = s.cell(line, 'H')
       credit = (s.cell(line, 'I').to_f * 100).round.to_i
       debit = (s.cell(line, 'J').to_f * 100).round.to_i
-      date_changed = s.cell(line, 'K')
-      endon_date = s.cell(line, 'L')
-      default_item_id = s.cell(line, 'M')
+      default_item_id = s.cell(line, 'K')
+      date = s.cell(line, 'L')
+
+      # month = Month.new(budget_id: budget_id, date: date)
+      month = Month.find_or_create_by_budget_id_and_date(budget_id, date)
 
       new_change = DefaultChange.new(name: name, day: day, credit_cents: credit, 
-                            debit_cents: debit, date_changed: date_changed, endon_date: endon_date,
-                            default_item_id: default_item_id)
+                            debit_cents: debit, default_item_id: default_item_id, month_id: month.id)
       if new_change.save
         puts "Change saved!"
         # new_change.update_newer_balances

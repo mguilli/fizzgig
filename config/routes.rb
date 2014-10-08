@@ -13,7 +13,10 @@ Fizzgig::Application.routes.draw do
   end
 
   resources :budgets 
-  resources :default_items do
+  resources :default_items
+
+  resources :months do
+    resources :items
     resources :default_changes
   end
 

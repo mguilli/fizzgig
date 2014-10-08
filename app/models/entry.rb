@@ -53,6 +53,7 @@ class Entry < ActiveRecord::Base
   def update_newer_balances
     z = self
     xregister = Register.where(id: z.register_id).first
+    xbudget = xregister.user.budget
     xentries = xregister.entries.order(date: :asc).order(credit_cents: :desc)
                                 .order(debit_cents: :desc).order(id: :asc)
 
@@ -66,6 +67,14 @@ class Entry < ActiveRecord::Base
     if position == 0
       balance_to_here = xregister.startbalance_cents + movement
       new_rank = 1
+
+      # update start_date of register if current entry is the first entry
+      xregister.update_attributes(start_date: z.date)
+
+      #update start_date of budget if current entry is the oldest entry in all registers
+      if (z.date < xbudget.start_date)
+        xbudget.update_attributes(start_date: z.date)
+      end
     else
       balance_to_here = xentries[position-1].balance_cents + movement
       new_rank = xentries[position-1].rank + 1
