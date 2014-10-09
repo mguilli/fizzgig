@@ -1,3 +1,5 @@
+start = Time.now
+
 testuser = User.create(
   first_name: 'Test',
   last_name: 'User',
@@ -43,7 +45,12 @@ range.each do |x|
   puts 'Month created and filled!'
 end
 
+finish = Time.now
+duration = (finish - start).round(2)
 
+puts " "
+puts "Total time: #{duration} seconds."
+puts " "
 puts "#{User.count} users created."
 puts "#{Register.count} registers created."
 puts "#{Entry.count} register entries created."
