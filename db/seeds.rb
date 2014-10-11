@@ -35,7 +35,7 @@ Entry.get_excel_seed_data('Test', 5, 16, register.id)
 
 
 DefaultItem.set_default_seed('DefaultItems', 3, 27, budget.id)
-DefaultChange.set_change_seed('DefaultItems', 3, 7, budget.id)
+DefaultChange.set_change_seed('DefaultItems', 3, 8, budget.id)
 
 range = (testuser.registers.pluck(:start_date).min.beginning_of_month .. Date.today).select {|x| x.day == 1}
 

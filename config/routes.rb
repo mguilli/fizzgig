@@ -13,12 +13,14 @@ Fizzgig::Application.routes.draw do
   end
 
   resources :budgets 
-  resources :default_items
-
-  resources :months do
-    resources :items
-    resources :default_changes
+  resources :default_items do
+    post 'pay', on: :collection
   end
+
+  resources :months
+  resources :items 
+  resources :default_changes
+  
 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'

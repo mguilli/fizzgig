@@ -1,7 +1,7 @@
 <h3><%= @this_date.strftime("%B %Y") %></h3>
 <h5>Starting balance: <%= Money.new(@starting_balance) %></h5>
-<%= link_to "Prev", months_path(date: @prev_month) unless @prev_month.nil? %>
-<%= link_to "Next", months_path(date: @next_month) %>
+<%= link_to "Prev", months_path(date: @prev_month_date) unless @prev_month_date.nil? %>
+<%= link_to "Next", months_path(date: @next_month_date) %>
 
 <div class="row">
   <div class="col-md-10">
@@ -9,30 +9,61 @@
       <thead>
         <tr>
           <th>Date</th>
-          <th>DefaultItem ID</th>
+          <th>Paid/Received</th>
           <th>Description</th>
           <th>Receivable</th>
           <th>Payable</th>
           <th>Balance</th>
+          <th>DefaultItem ID</th>
         </tr>
       </thead>
       <tbody>
         <% balance = Money.new(@starting_balance) %>
         <% @month_records.each do |record| %>
-          <% balance += (record.credit - record.debit) %>
-          <tr>
-            <td>
-              <% if (Date.valid_date?(@this_date.year, @this_date.month, record.day)) %>
-                <%= Date.new(@this_date.year, @this_date.month, record.day) %>
-              <% else %>
-                <%= Date.civil(@this_date.year, @this_date.month, -1) %>
-              <% end %>
-            </td>
-            <td><%= record.class == DefaultItem ? '-' : record.default_item_id %></td>
+          <% balance += increment_balance(record) %>
+          <tr class=<%= check_date(@this_date, record).strftime('%m%d%Y') %>>
+            <td><%= check_date(@this_date, record) %></td>
+            <td><%= paid_button_status(record) %></td>
             <td><%= record.name %></td>
             <td><%= hide_if_nil(record.credit) %></td>
             <td><%= hide_if_nil(record.debit) %></td>
             <td><%= balance %></td>
+            <td><%= record.has_attribute?(:paid) ? record.default_item_id : '-' %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<h3><%= @next_month_date.strftime("%B %Y") %></h3>
+<h5>Starting balance: <%= balance %></h5>
+
+<div class="row">
+  <div class="col-md-10">
+    <table class="table table-condensed">
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Paid/Received</th>
+          <th>Description</th>
+          <th>Receivable</th>
+          <th>Payable</th>
+          <th>Balance</th>
+          <th>DefaultItem ID</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @month_records.each do |record| %>
+          <% balance += increment_balance(record) %>
+          <tr class=<%= check_date(@next_month_date, record).strftime('%m%d%Y') %>>
+            <td><%= check_date(@next_month_date, record) %></td>
+            <td><%= paid_button_status(record) %></td>
+            <td><%= record.name %></td>
+            <td><%= hide_if_nil(record.credit) %></td>
+            <td><%= hide_if_nil(record.debit) %></td>
+            <td><%= balance %></td>
+            <td><%= record.has_attribute?(:paid) ? record.default_item_id : '-' %></td>
           </tr>
         <% end %>
       </tbody>

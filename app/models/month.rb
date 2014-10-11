@@ -5,13 +5,25 @@ class Month < ActiveRecord::Base
 
   monetize :movement_cents
 
-  def set_movement
-    # For months where default_items have been written to items, 
-    # sum the credits and debits of items and default_changes,
-    # and write to month's movement_cents
-    collection = self.items + self.default_changes
-    sum = collection.sum {|x| x.paid == false ? (x.credit_cents - x.debit_cents):0}
-    self.update_attributes(movement_cents: sum)
+  def self.get_records(budget, this_date, month)
+    if this_date.future?
+      # Check if @month exists
+      if month.nil?
+        # If @month == nil, then no changes or paid items have been created
+        month_records = Month.gather_and_sort(budget.default_items)
+      else
+        # Find DefaultItems not changed or marked as paid
+        j = month.defs_less_existing(budget)
+        month_records = Month.gather_and_sort(j, month.items, month.default_changes)
+      end
+    else
+      month_records = Month.gather_and_sort(month.items, month.default_changes)
+    end
+  end
+
+  def self.gather_and_sort(a, b=[], c=[])
+    collection = a + b + c
+    sorted = collection.sort_by {|x| [x.day, -x.credit_cents, -x.debit_cents]}
   end
 
   def self.get_movement(budget, this_date)
@@ -30,14 +42,15 @@ class Month < ActiveRecord::Base
         plus_range.each do |z|
           if budget.months.find_by_date(z).nil? == false
             # If month exists for date z 
-            mnth = budget.months.find_by_date(z)
-            dle = mnth.defs_less_existing(budget)
+            mnth = budget.months.find_by_date(z) # month
+            dle = mnth.defs_less_existing(budget) # defaultitems less existing
             collection = Month.gather_and_sort(dle, mnth.items, mnth.default_changes)
 
             # Sum credit and debit for DefaultItems
             move_di = collection.sum {|x| x.class == DefaultItem ? (x.credit_cents - x.debit_cents):0}
-            # Sum credit and debit for DefaultChanges and Items
-            move_dc_i = collection.sum {|x| x.class != DefaultItem ? ((x.credit_cents - x.debit_cents) unless x.paid == true):0}
+            # Sum credit and debit for DefaultChanges and Items except when marked paid
+            # binding.pry
+            move_dc_i = collection.sum {|x| x.class != DefaultItem ? (x.paid ? 0 : (x.credit_cents - x.debit_cents)) : 0}
             # Increment movement by both DefaultItems and (DefaultChanges & Items)
             move += (move_di + move_dc_i)
           else
@@ -59,14 +72,17 @@ class Month < ActiveRecord::Base
         movement = 0      
       end     
     end
-
     # Return movement
     movement
   end
 
-  def self.gather_and_sort(a, b=[], c=[])
-    collection = a + b + c
-    sorted = collection.sort_by {|x| [x.day, -x.credit_cents, -x.debit_cents]}
+  def set_movement
+    # For months where default_items have been written to items, 
+    # sum the credits and debits of items and default_changes,
+    # and write to month's movement_cents
+    collection = self.items + self.default_changes
+    sum = collection.sum {|x| x.paid == false ? (x.credit_cents - x.debit_cents):0}
+    self.update_attributes(movement_cents: sum)
   end
 
   def defs_less_existing(budget)

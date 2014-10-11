@@ -5,19 +5,6 @@ class DefaultItem < ActiveRecord::Base
   monetize :credit_cents
   monetize :debit_cents
 
-  def check_for_change(date)
-    change = default_changes.where("date_changed <= ? AND endon_date >= ?", date, date)
-    # change = false
-
-    # AND endon >= ?", month, month)
-    # check for nil values of endon -> perpetual application
-    if (change.empty?)
-      return self
-    else
-      return change.first
-    end
-  end
-
   def self.set_default_seed(sheet, start_row, end_row, budget_id)
     s = Roo::Excel.new("#{Rails.root}/tmp/FizzgigSampleData.xls")
     s.default_sheet = sheet
