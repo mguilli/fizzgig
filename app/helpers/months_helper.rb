@@ -35,4 +35,15 @@ module MonthsHelper
       Date.civil(this_date.year, this_date.month, -1) 
     end 
   end
+
+  def show_edit(record)
+    cls = 'btn btn-xs btn-default'
+    if record.class == Item
+      link_to('Edit', edit_item_path(record), class: cls)
+    elsif record.class == DefaultItem
+      link_to('Edit', record, class: cls)
+    else
+      link_to('Edit', record.default_item, class: cls)        
+    end    
+  end
 end

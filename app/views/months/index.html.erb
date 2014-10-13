@@ -1,11 +1,14 @@
 <h3><%= @this_date.strftime("%B %Y") %></h3>
+<%= link_to 'Edit Default Items', default_items_path %>
 <h5>Starting balance: <%= Money.new(@starting_balance) %></h5>
 <%= link_to "Prev", months_path(date: @prev_month_date) unless @prev_month_date.nil? %>
-<%= link_to "Next", months_path(date: @next_month_date) %>
+<%= link_to "Next", months_path(date: @next_month_date) %><br />
+
+<%= render 'form' %>
 
 <div class="row">
-  <div class="col-md-10">
-    <table class="table table-condensed">
+  <div class="col-md-12">
+    <table class="table table-condensed table-hover">
       <thead>
         <tr>
           <th>Date</th>
@@ -15,6 +18,7 @@
           <th>Payable</th>
           <th>Balance</th>
           <th>DefaultItem ID</th>
+          <th>Options</th>
         </tr>
       </thead>
       <tbody>
@@ -22,13 +26,17 @@
         <% @month_records.each do |record| %>
           <% balance += increment_balance(record) %>
           <tr class=<%= check_date(@this_date, record).strftime('%m%d%Y') %>>
-            <td><%= check_date(@this_date, record) %></td>
+            <td><%= check_date(@this_date, record).strftime('%_m/%d') %></td>
             <td><%= paid_button_status(record) %></td>
             <td><%= record.name %></td>
             <td><%= hide_if_nil(record.credit) %></td>
             <td><%= hide_if_nil(record.debit) %></td>
             <td><%= balance %></td>
             <td><%= record.has_attribute?(:paid) ? record.default_item_id : '-' %></td>
+            <td>
+              <%= show_edit(record) %>
+
+            </td>
           </tr>
         <% end %>
       </tbody>
@@ -40,7 +48,7 @@
 <h5>Starting balance: <%= balance %></h5>
 
 <div class="row">
-  <div class="col-md-10">
+  <div class="col-md-12">
     <table class="table table-condensed">
       <thead>
         <tr>
@@ -57,7 +65,7 @@
         <% @month_records.each do |record| %>
           <% balance += increment_balance(record) %>
           <tr class=<%= check_date(@next_month_date, record).strftime('%m%d%Y') %>>
-            <td><%= check_date(@next_month_date, record) %></td>
+            <td><%= check_date(@next_month_date, record).strftime('%_m/%d') %></td>
             <td><%= paid_button_status(record) %></td>
             <td><%= record.name %></td>
             <td><%= hide_if_nil(record.credit) %></td>

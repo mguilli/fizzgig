@@ -17,9 +17,9 @@
   <div class='col-md-12'>
     <%= form_tag multiselect_register_entries_path, {class: 'form', method: :put, remote: true} do %>
       <div class='btn-group'>
-        <%= submit_tag 'Mark Cleared', class: 'btn btn-default' %>
-        <%= submit_tag 'Mark Uncleared', name: 'unclear_button', class: 'btn btn-default' %>
-        <%= submit_tag 'Delete', name: 'delete_button', class: 'btn btn-default', data: { confirm: 'Are you sure?'} %>
+        <%= submit_tag 'Mark Cleared', class: 'btn btn-sm btn-default' %>
+        <%= submit_tag 'Mark Uncleared', name: 'unclear_button', class: 'btn btn-sm btn-default' %>
+        <%= submit_tag 'Delete', name: 'delete_button', class: 'btn btn-sm btn-default', data: { confirm: 'Are you sure?'} %>
       </div>
 
       <table class="table table-condensed">

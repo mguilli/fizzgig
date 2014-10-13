@@ -1,2 +1,41 @@
 <h1>DefaultItems#show</h1>
-<p>Find me in app/views/default_items/show.html.erb</p>
+<%= link_to 'Back', :back %><br/><br/>
+<div class="row">
+  <div class="col-md-12">
+    <table class="table table-condensed">
+      <thead>
+        <tr class='info'>
+          <th>Description</th>
+          <th>Day</th>
+          <th>Month</th>
+          <th>Receivable</th>
+          <th>Payable</th>
+          <th>Options</th>
+        </tr>
+        <tr>
+          <th><%= @default_item.name %></th>
+          <th><%= @default_item.day %></th>
+          <th></th>
+          <th><%= hide_if_nil(@default_item.credit) %></th>
+          <th><%= hide_if_nil(@default_item.debit) %></th>
+          <th><%= link_to 'Edit', edit_default_item_path(@default_item), class: 'btn btn-xs btn-primary' %></th>
+        </tr>
+        <tr class='info'>
+          <th>Changes</th><th></th><th></th><th></th><th></th><th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @changes.each do |z| %>
+          <tr>
+            <td><%= z.name %></td>
+            <td><%= z.day %></td>
+            <td><%= z.month.date.strftime('%m/%Y') %></td>
+            <td><%= hide_if_nil(z.credit) %></td>
+            <td><%= hide_if_nil(z.debit) %></td>
+            <td><%= link_to 'Edit', edit_default_change_path(z), class: 'btn btn-xs btn-default' %></td>
+          </tr>
+        <% end -%>
+      </tbody>
+    </table>
+  </div>
+</div>

@@ -40,9 +40,9 @@ class Month < ActiveRecord::Base
         move = 0
 
         plus_range.each do |z|
-          if budget.months.find_by_date(z).nil? == false
+          if budget.months.find_by(date: z).nil? == false
             # If month exists for date z 
-            mnth = budget.months.find_by_date(z) # month
+            mnth = budget.months.find_by(date: z) # month
             dle = mnth.defs_less_existing(budget) # defaultitems less existing
             collection = Month.gather_and_sort(dle, mnth.items, mnth.default_changes)
 

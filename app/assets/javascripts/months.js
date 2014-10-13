@@ -13,6 +13,7 @@ ready = function () {
   var first_year = first.slice(-4);
   var first_of_month = (first_month + '01' + first_year);
 
+  console.log('Sanity');
   console.log(output);
   console.log($('tr.' + output));
 

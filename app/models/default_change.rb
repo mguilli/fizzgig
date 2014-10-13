@@ -1,6 +1,6 @@
 class DefaultChange < ActiveRecord::Base
   belongs_to :month
-  belongs_to :default_items
+  belongs_to :default_item
 
   monetize :credit_cents
   monetize :debit_cents

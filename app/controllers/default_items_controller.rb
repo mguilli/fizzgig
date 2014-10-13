@@ -17,9 +17,12 @@ class DefaultItemsController < ApplicationController
   end
 
   def index
+    @default_items = current_user.budget.default_items.order(:day).includes(:default_changes)
   end
 
   def show
+    @default_item = DefaultItem.find(params[:id])
+    @changes = @default_item.default_changes.sort_by{|x| x.month.date}
   end
 
   def pay

@@ -1,0 +1,27 @@
+<br />
+<%= form_for @item, html: {class: 'form-inline', role: 'form'} do |f| %>
+  <div class='form-group'>
+    <%= f.label :date %>
+    <%= f.date_field :date, class: 'form-control', value: Time.now.strftime('%Y-%m-%d') %>
+  </div>
+
+  <div class='form-group'>
+    <%= f.label :name %>
+    <%= f.text_field :name, class: 'form-control', autofocus: true %>
+  </div>
+
+  <div class='form-group'>
+    <%= f.label :receivable %>
+    <%= f.text_field :credit, class: 'form-control', placeholder: '0.00' %>
+  </div>
+
+  <div class='form-group'>
+    <%= f.label :payable %>
+    <%= f.text_field :debit, class: 'form-control', placeholder: '0.00' %>  
+  </div>
+
+  <div class='form-group'>
+    <%= f.submit class: 'btn btn-primary'%>
+  </div>
+<% end %>
+<br />
